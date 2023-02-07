@@ -118,17 +118,18 @@ namespace HelloWold
                     Console.Write(valuesEquation[i].ToString());
                     Console.Write(operatorsEquation[i].ToString());
                 }
-               
+
+                res = valuesEquation[0];
                 //перемножение и деление
                 for (int i = 0; i < countNumber; i++)
                 {
                     if (operatorsEquation[i] == '+')
                     {
-                        res += valuesEquation[i];
+                        res += valuesEquation[i+1];
                     }
                     else if (operatorsEquation[i] == '-')
                     {
-                        res -= valuesEquation[i];
+                        res -= valuesEquation[i + 1];
                     }
                 }
                 Console.WriteLine("");
