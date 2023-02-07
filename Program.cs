@@ -31,7 +31,12 @@ namespace HelloWold
             int countOperators = 0;
             /** Массив найденных операторов **/
             char[] operatorsEquation = new char[255];
-            
+            /** Флаг вещественное число**/
+            bool realNumber = false;
+            /** Знак числа **/
+            bool numberSign = false;
+            /** Результат вычислений **/
+            double res = 0;
             /*** Ввод данных **/
             Console.WriteLine("Калькулятор");
             Console.WriteLine("");
@@ -42,11 +47,18 @@ namespace HelloWold
             int k = equation.Length;
             for (int i = 0; i < k; i++)
             {
-
+            //Формируем число
                 if (Array.IndexOf(numbers, equation[i]) > -1)
                 {
                     number += equation[i].ToString();
                 }
+            //Если попался знак точка или запятая, запоминаем сей факт, если несколько знаков подряд игнорируем их
+                else if ((Array.IndexOf(delimiter, equation[i]) > -1)&&(!realNumber))
+                {
+                    realNumber = true;
+                    number += ",";
+                }
+            //Определяем оператор 
                 else if (Array.IndexOf(operators, equation[i]) > -1)
                 {
                     if (number.Length > 0)
@@ -54,6 +66,7 @@ namespace HelloWold
                         valuesEquation[countNumber] = Convert.ToDouble(number);
                         countNumber++;
                         number = "";
+                        realNumber = false;
                     }
                     operatorsEquation[countOperators] = equation[i];
                     countOperators++;
@@ -68,12 +81,58 @@ namespace HelloWold
                 number = "";
             }
 
-
-
-            for (int i=0;i<countNumber; i++)
+            if (countNumber != countOperators + 1)
             {
-                Console.WriteLine(valuesEquation[i].ToString());
-                Console.WriteLine(operatorsEquation[i].ToString());
+                Console.WriteLine("Ошибка в записи ");
+
+            }
+            else
+            {
+                //Вывод
+                for (int i = 0; i < countNumber; i++)
+                {
+                    Console.Write(valuesEquation[i].ToString());
+                    Console.Write(operatorsEquation[i].ToString());
+                }
+                Console.WriteLine("");
+                //перемножение и деление
+                for (int i = 0; i < countNumber; i++)
+                {
+                    if(operatorsEquation[i]=='*')
+                    {
+                        valuesEquation[i] = valuesEquation[i] * valuesEquation[i + 1];
+                        valuesEquation[i + 1] = 0;
+                        operatorsEquation[i] = '+';
+                    }
+                    else if (operatorsEquation[i] == '/')
+                    {
+                        valuesEquation[i] = valuesEquation[i] / valuesEquation[i + 1];
+                        valuesEquation[i + 1] = 0;
+                        operatorsEquation[i] = '+';
+                    }
+                }
+   
+                //Вывод
+                for (int i = 0; i < countNumber; i++)
+                {
+                    Console.Write(valuesEquation[i].ToString());
+                    Console.Write(operatorsEquation[i].ToString());
+                }
+               
+                //перемножение и деление
+                for (int i = 0; i < countNumber; i++)
+                {
+                    if (operatorsEquation[i] == '+')
+                    {
+                        res += valuesEquation[i];
+                    }
+                    else if (operatorsEquation[i] == '-')
+                    {
+                        res -= valuesEquation[i];
+                    }
+                }
+                Console.WriteLine("");
+                Console.Write("Ответ: "+res);
             }
         }
     }
